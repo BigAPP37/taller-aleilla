@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { config } from "@/config";
+import { serviceIconMap } from "@/components/ui/ServiceIcons";
 
 export function ServicesGrid({ showAll = false }: { showAll?: boolean }) {
   const services = showAll ? config.services : config.services.filter(s => s.featured);
@@ -44,24 +45,31 @@ export function ServicesGrid({ showAll = false }: { showAll?: boolean }) {
           )}
         </div>
 
-        {/* Grid — SIEMPRE 2 cols en mobile */}
+        {/* Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-          {services.map((s, i) => (
-            <Link
-              key={s.slug}
-              href={`/servicios/${s.slug}`}
-              className="ri group bg-zinc-900 border border-white/6 hover:border-red-600/40 active:scale-95 p-4 sm:p-5 flex flex-col gap-2 rounded-sm transition-all"
-              style={{ opacity: 0, transform: "translateY(14px)", transition: "opacity 0.35s ease, transform 0.35s ease, border-color 0.2s, background 0.2s" }}
-            >
-              <span className="text-2xl">{s.icon}</span>
-              <h3 className="font-display text-white uppercase text-sm sm:text-base leading-tight group-hover:text-red-500 transition-colors">
-                {s.name}
-              </h3>
-              <p className="text-white/35 font-body text-xs leading-relaxed hidden sm:block line-clamp-2">
-                {s.shortDescription}
-              </p>
-            </Link>
-          ))}
+          {services.map((s, i) => {
+            const Icon = serviceIconMap[s.slug];
+            return (
+              <Link
+                key={s.slug}
+                href={`/servicios/${s.slug}`}
+                className="ri group bg-zinc-900 border border-white/6 hover:border-red-600/40 hover:bg-zinc-800/60 active:scale-95 p-4 sm:p-5 flex flex-col gap-3 rounded-sm transition-all duration-200"
+                style={{ opacity: 0, transform: "translateY(14px)", transition: "opacity 0.35s ease, transform 0.35s ease, border-color 0.2s, background 0.2s" }}
+              >
+                {Icon && (
+                  <Icon className="w-7 h-7 text-red-600/70 group-hover:text-red-500 transition-colors duration-200" />
+                )}
+                <div>
+                  <h3 className="font-display text-white uppercase text-sm sm:text-base leading-tight group-hover:text-red-500 transition-colors duration-200">
+                    {s.name}
+                  </h3>
+                  <p className="text-white/35 font-body text-xs leading-relaxed mt-1 hidden sm:block line-clamp-2">
+                    {s.shortDescription}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
