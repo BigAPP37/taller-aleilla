@@ -40,11 +40,11 @@ export function Hero() {
       {/* Contenido — pegado abajo en mobile */}
       <div
         ref={ref}
-        className="relative z-10 flex flex-col justify-end min-h-screen px-5 pb-10 pt-20 lg:justify-center lg:px-16 lg:pb-20 max-w-2xl"
+        className="relative z-10 flex flex-col items-center justify-end text-center min-h-screen px-5 pb-12 pt-20 lg:justify-center lg:pb-20"
       >
         {/* Badge */}
         <div
-          className="hi inline-flex items-center gap-2 border border-red-600/40 bg-red-600/10 px-3 py-1.5 rounded-sm w-fit mb-5"
+          className="hi inline-flex items-center gap-2 border border-red-600/40 bg-red-600/10 px-3 py-1.5 rounded-sm mb-5"
           style={{ opacity: 0, transform: "translateY(16px)", transition: "all 0.5s ease" }}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse" />
@@ -79,7 +79,7 @@ export function Hero() {
 
         {/* CTAs */}
         <div
-          className="hi flex flex-col gap-3 mb-8"
+          className="hi flex flex-col w-full max-w-xs gap-3 mb-8"
           style={{ opacity: 0, transform: "translateY(16px)", transition: "all 0.5s ease" }}
         >
           <a
@@ -100,7 +100,7 @@ export function Hero() {
 
         {/* Pills de confianza */}
         <div
-          className="hi flex flex-wrap gap-2"
+          className="hi flex flex-wrap justify-center gap-2"
           style={{ opacity: 0, transform: "translateY(16px)", transition: "all 0.5s ease" }}
         >
           {[
