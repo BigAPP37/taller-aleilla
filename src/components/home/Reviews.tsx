@@ -11,7 +11,7 @@ export function Reviews() {
       ([entry]) => {
         if (!entry.isIntersecting) return;
         entry.target.querySelectorAll<HTMLElement>(".ri").forEach((el, i) => {
-          setTimeout(() => { el.style.opacity = "1"; el.style.transform = "translateY(0)"; }, i * 100);
+          setTimeout(() => { el.style.opacity = "1"; el.style.transform = "translateX(0)"; }, i * 100);
         });
         io.disconnect();
       },
@@ -22,49 +22,61 @@ export function Reviews() {
   }, []);
 
   return (
-    <section ref={ref} id="reseñas" className="bg-zinc-900 py-14 sm:py-20">
-      <div className="max-w-5xl mx-auto px-5 sm:px-8">
+    <section ref={ref} id="reseñas" className="bg-zinc-900 py-12 sm:py-20">
+      <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 sm:mb-12">
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-5 h-px bg-red-600" />
-              <span className="text-red-500 text-[11px] font-body font-semibold uppercase tracking-[0.15em]">Lo que dicen</span>
-            </div>
-            <h2 className="font-display text-white uppercase leading-none" style={{ fontSize: "clamp(2rem, 8vw, 4rem)" }}>
-              Reseñas<br /><span className="text-red-600">reales</span>
-            </h2>
-          </div>
-
-          {/* Rating */}
-          <a
-            href={config.social.google}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-4 bg-zinc-800 border border-white/6 hover:border-red-600/30 active:scale-95 px-5 py-4 rounded-sm transition-all self-start"
-          >
-            <div className="text-center">
-              <div className="font-display text-white text-3xl leading-none">{config.googleRating}</div>
-              <div className="flex gap-0.5 mt-1">
-                {[1,2,3,4,5].map(i => (
-                  <svg key={i} className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                  </svg>
-                ))}
+        <div className="px-5 sm:px-8 mb-6 sm:mb-10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-px bg-red-600" />
+                <span className="text-red-500 text-[11px] font-body font-semibold uppercase tracking-[0.15em]">Lo que dicen</span>
               </div>
-              <p className="text-white/30 text-[10px] font-body mt-0.5">{config.googleReviewCount} reseñas</p>
+              <h2 className="font-display text-white uppercase leading-none" style={{ fontSize: "clamp(1.6rem, 6vw, 3rem)" }}>
+                Reseñas<br /><span className="text-red-600">reales</span>
+              </h2>
             </div>
-            <span className="text-red-500 text-xs font-body font-semibold leading-snug">Ver en<br />Google →</span>
-          </a>
+            <a
+              href={config.social.google}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 bg-zinc-800 border border-white/6 hover:border-red-600/30 active:scale-95 px-4 py-3 rounded-sm transition-all self-start"
+            >
+              <div className="text-center">
+                <div className="font-display text-white text-2xl leading-none">{config.googleRating}</div>
+                <div className="flex gap-0.5 mt-1">
+                  {[1,2,3,4,5].map(i => (
+                    <svg key={i} className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-white/30 text-[10px] font-body mt-0.5">{config.googleReviewCount} reseñas</p>
+              </div>
+              <span className="text-red-500 text-xs font-body font-semibold leading-snug">Ver en<br />Google →</span>
+            </a>
+          </div>
         </div>
 
-        {/* Grid — 1 col mobile, 2 tablet, 4 desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {/* Carrusel horizontal deslizable */}
+        <div
+          className="flex gap-3 overflow-x-auto px-5 sm:px-8 pb-4"
+          style={{
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+            scrollbarWidth: "none",
+          }}
+        >
           {config.reviews.map((r, i) => (
             <div
               key={i}
-              className="ri bg-zinc-800/50 border border-white/6 hover:border-red-600/20 p-5 flex flex-col gap-3 rounded-sm transition-colors"
-              style={{ opacity: 0, transform: "translateY(16px)", transition: "opacity 0.4s ease, transform 0.4s ease, border-color 0.3s" }}
+              className="ri flex-shrink-0 w-[78vw] sm:w-72 lg:w-64 bg-zinc-800/50 border border-white/6 p-5 flex flex-col gap-3 rounded-sm"
+              style={{
+                scrollSnapAlign: "start",
+                opacity: 0,
+                transform: "translateX(20px)",
+                transition: "opacity 0.4s ease, transform 0.4s ease",
+              }}
             >
               <div className="flex gap-0.5">
                 {[1,2,3,4,5].map(s => (
@@ -80,12 +92,13 @@ export function Reviews() {
                 </div>
                 <div>
                   <p className="text-white font-body text-sm font-semibold">{r.author}</p>
-                  <p className="text-white/30 font-body text-xs">Cliente verificado · Google</p>
+                  <p className="text-white/30 font-body text-xs">Google · Verificado</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
+        <p className="px-5 sm:px-8 mt-2 text-white/20 font-body text-xs sm:hidden">← Desliza para ver más →</p>
       </div>
     </section>
   );
