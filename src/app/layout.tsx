@@ -1,0 +1,45 @@
+import type { Metadata } from "next";
+import { Bebas_Neue, Inter } from "next/font/google";
+import "./globals.css";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { WhatsAppFloat } from "@/components/ui/WhatsAppFloat";
+import { config } from "@/config";
+
+const display = Bebas_Neue({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const body = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: `Taller Mecánico en Ripollet | Motrio ${config.brandName}`,
+  description: config.seoDescription,
+  metadataBase: new URL(config.domain),
+  openGraph: {
+    title: `Taller Mecánico en Ripollet | ${config.brandName}`,
+    description: config.seoDescription,
+    locale: "es_ES",
+    type: "website",
+  },
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="es" className={`${display.variable} ${body.variable}`}>
+      <body className="bg-zinc-950 text-white antialiased">
+        <Header />
+        <main>{children}</main>
+        <Footer />
+        <WhatsAppFloat />
+      </body>
+    </html>
+  );
+}
