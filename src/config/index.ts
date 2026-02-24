@@ -8,7 +8,7 @@ export const config = {
   // Contacto
   phone: "608205512",
   phoneFormatted: "608 20 55 12",
-  email: "info@aeliamotor.com",
+  email: "info@aeliamotor.es",
   whatsappNumber: "34608205512",
 
   // Ubicación
@@ -44,7 +44,7 @@ export const config = {
   },
 
   // SEO
-  domain: "https://aeliamotor.com",
+  domain: "https://aeliamotor.es",
   seoDescription: "Taller mecánico oficial Motrio en Ripollet, Barcelona. Cambio de aceite, frenos, neumáticos, ITV y más. Presupuesto gratis en 30 min.",
 
   // Servicios
