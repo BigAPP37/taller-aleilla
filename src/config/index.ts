@@ -17,9 +17,9 @@ export const config = {
   city: "Ripollet",
   postalCode: "08291",
   province: "Barcelona",
-  mapUrl: "https://maps.google.com/?q=Carrer+de+la+Ind%C3%BAstria+19+Ripollet",
-  lat: 41.4957,
-  lng: 2.1543,
+  mapUrl: "https://maps.google.com/?q=Carrer+de+la+Ind%C3%BAstria,+19,+08291+Ripollet,+Barcelona",
+  lat: 41.4940,
+  lng: 2.1623,
 
   // Google
   googleRating: 5.0,
