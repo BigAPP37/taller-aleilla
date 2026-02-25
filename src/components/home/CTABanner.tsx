@@ -1,5 +1,6 @@
 "use client";
 
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { config } from "@/config";
 
 export function CTABanner({
@@ -9,11 +10,13 @@ export function CTABanner({
   title?: string;
   subtitle?: string;
 }) {
+  const ref = useScrollReveal();
+
   return (
     <section className="relative bg-red-600 overflow-hidden py-12 sm:py-16">
       <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,0,0,.25) 10px,rgba(0,0,0,.25) 11px)" }} />
 
-      <div className="relative z-10 max-w-2xl mx-auto px-5 sm:px-8 text-center">
+      <div ref={ref as any} className="reveal relative z-10 max-w-2xl mx-auto px-5 sm:px-8 text-center">
         <h2 className="font-display text-white uppercase leading-none mb-3" style={{ fontSize: "clamp(1.8rem, 8vw, 3.5rem)" }}>
           {title}
         </h2>

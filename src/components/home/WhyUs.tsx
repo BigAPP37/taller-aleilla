@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const pillars = [
   {
@@ -55,60 +55,33 @@ const stats = [
 ];
 
 export function WhyUs() {
-  const ref = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        entry.target.querySelectorAll<HTMLElement>(".ri").forEach((el, i) => {
-          setTimeout(() => {
-            el.style.opacity = "1";
-            el.style.transform = "translateY(0)";
-          }, i * 90);
-        });
-        io.disconnect();
-      },
-      { threshold: 0.08 }
-    );
-    if (ref.current) io.observe(ref.current);
-    return () => io.disconnect();
-  }, []);
+  const headerRef = useScrollReveal();
+  const cardsRef = useScrollReveal({ threshold: 0.08 });
+  const statsRef = useScrollReveal({ threshold: 0.1 });
 
   return (
-    <section ref={ref} id="nosotros" className="bg-zinc-900 py-12 sm:py-20">
+    <section id="nosotros" className="bg-zinc-900 py-12 sm:py-20">
       <div className="max-w-5xl mx-auto px-5 sm:px-8">
 
-        {/* Header */}
-        <div className="mb-8 sm:mb-12">
+        <div ref={headerRef as any} className="reveal mb-8 sm:mb-12">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-5 h-px bg-red-600" />
             <span className="text-red-500 text-[11px] font-body font-semibold uppercase tracking-[0.15em]">
               Por qué elegirnos
             </span>
           </div>
-          <h2
-            className="font-display text-white uppercase leading-none"
-            style={{ fontSize: "clamp(1.8rem, 7vw, 3.5rem)" }}
-          >
+          <h2 className="font-display text-white uppercase leading-none" style={{ fontSize: "clamp(1.8rem, 7vw, 3.5rem)" }}>
             Tu coche en manos<br />
             <span className="text-red-600">que de verdad cuidan</span>
           </h2>
         </div>
 
-        {/* Cards — 2 cols mobile, 4 desktop */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mb-3">
+        <div ref={cardsRef as any} className="reveal reveal-stagger grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mb-3">
           {pillars.map((p, i) => (
             <div
               key={i}
-              className="ri relative bg-zinc-950 border border-white/6 hover:border-red-600/30 transition-colors duration-300 p-4 sm:p-6 flex flex-col gap-3 rounded-sm overflow-hidden"
-              style={{
-                opacity: 0,
-                transform: "translateY(18px)",
-                transition: "opacity 0.45s ease, transform 0.45s ease, border-color 0.3s",
-              }}
+              className="relative bg-zinc-950 border border-white/6 hover:border-red-600/30 transition-colors duration-300 p-4 sm:p-6 flex flex-col gap-3 rounded-sm overflow-hidden"
             >
-              {/* Número grande de fondo */}
               <span
                 className="absolute -bottom-3 -right-1 font-display text-red-600/10 leading-none select-none pointer-events-none"
                 style={{ fontSize: "clamp(4rem, 12vw, 7rem)" }}
@@ -116,13 +89,9 @@ export function WhyUs() {
               >
                 {p.n}
               </span>
-
-              {/* Icono */}
               <div className="w-10 h-10 bg-red-600/10 border border-red-600/20 rounded-sm flex items-center justify-center text-red-500 flex-shrink-0">
                 {p.icon}
               </div>
-
-              {/* Texto */}
               <div className="relative z-10">
                 <h3 className="font-display text-white uppercase text-base sm:text-lg leading-tight mb-1.5">
                   {p.title}
@@ -135,18 +104,9 @@ export function WhyUs() {
           ))}
         </div>
 
-        {/* Stats bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/5 border border-white/6 rounded-sm overflow-hidden">
+        <div ref={statsRef as any} className="reveal reveal-stagger grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/5 border border-white/6 rounded-sm overflow-hidden">
           {stats.map((s, i) => (
-            <div
-              key={i}
-              className="ri bg-zinc-950 text-center py-5 px-3"
-              style={{
-                opacity: 0,
-                transform: "translateY(14px)",
-                transition: "opacity 0.4s ease, transform 0.4s ease",
-              }}
-            >
+            <div key={i} className="bg-zinc-950 text-center py-5 px-3">
               <div className="font-display text-red-600 leading-none mb-1" style={{ fontSize: "clamp(1.5rem, 5vw, 2.2rem)" }}>
                 {s.v}
               </div>

@@ -1,17 +1,21 @@
 "use client";
 
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { config } from "@/config";
 
 export function LocationSection() {
+  const headerRef = useScrollReveal();
+  const contentRef = useScrollReveal({ threshold: 0.08 });
+
   return (
     <section id="contacto" className="bg-zinc-900 py-14 sm:py-20">
       <div className="max-w-5xl mx-auto px-5 sm:px-8">
-        <div className="flex items-center gap-2 mb-8">
+        <div ref={headerRef as any} className="reveal flex items-center gap-2 mb-8">
           <div className="w-5 h-px bg-red-600" />
           <span className="text-red-500 text-[11px] font-body font-semibold uppercase tracking-[0.15em]">Cómo llegar</span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div ref={contentRef as any} className="reveal grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Info */}
           <div className="flex flex-col gap-5">
             <h2 className="font-display text-white uppercase leading-none" style={{ fontSize: "clamp(1.8rem, 7vw, 3.5rem)" }}>
