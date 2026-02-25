@@ -46,7 +46,19 @@ export function Footer() {
 
         <div className="border-t border-white/6 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-white/20 font-body text-xs">© {new Date().getFullYear()} {config.legalName}. Todos los derechos reservados.</p>
-          <p className="text-white/20 font-body text-xs">Taller oficial de la red Motrio</p>
+          <div className="flex items-center gap-4">
+            <Link href="/aviso-legal" className="text-white/20 hover:text-white/50 font-body text-xs transition-colors">
+              Aviso Legal
+            </Link>
+            <span className="text-white/10">·</span>
+            <Link href="/politica-privacidad" className="text-white/20 hover:text-white/50 font-body text-xs transition-colors">
+              Privacidad
+            </Link>
+            <span className="text-white/10">·</span>
+            <Link href="/politica-cookies" className="text-white/20 hover:text-white/50 font-body text-xs transition-colors">
+              Cookies
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
