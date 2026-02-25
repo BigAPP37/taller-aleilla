@@ -18,8 +18,8 @@ export const config = {
   postalCode: "08291",
   province: "Barcelona",
   mapUrl: "https://maps.google.com/?q=Carrer+de+la+Ind%C3%BAstria,+19,+08291+Ripollet,+Barcelona",
-  lat: 41.4940,
-  lng: 2.1623,
+  lat: 41.49373,
+  lng: 2.16433,
 
   // Google
   googleRating: 5.0,
