@@ -63,7 +63,7 @@ export function LocationSection() {
           {/* Mapa embed */}
           <div className="w-full h-64 sm:h-80 lg:h-full min-h-[300px] rounded-sm overflow-hidden border border-white/6">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2987.5!2d2.1543!3d41.4957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDI5JzQ0LjUiTiAywrAwOSczMS4xIkU!5e0!3m2!1ses!2ses!4v1"
+              src="https://maps.google.com/maps?q=Carrer+de+la+Indústria,+19,+08291+Ripollet,+Barcelona&output=embed&z=17"
               width="100%"
               height="100%"
               style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
