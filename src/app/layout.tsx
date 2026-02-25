@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   title: `Taller Mecánico en Ripollet | Motrio ${config.brandName}`,
   description: config.seoDescription,
   metadataBase: new URL(config.domain),
+  verification: {
+    google: "cEJhT9KqJrzT4rvZHsYoHnDSDI0dgXYLxNKeUHy7Xpk",
+  },
   openGraph: {
     title: `Taller Mecánico en Ripollet | ${config.brandName}`,
     description: config.seoDescription,
