@@ -23,7 +23,7 @@ export const config = {
 
   // Google
   googleRating: 5.0,
-  googleReviewCount: 20,
+  googleReviewCount: 22,
 
   // Horario
   hours: [
@@ -65,10 +65,12 @@ export const config = {
 
   // Reseñas
   reviews: [
-    { author: "Carlos M.",    rating: 5, text: "Rápidos, profesionales y honestos. El presupuesto fue exacto, sin sorpresas. Volvería sin dudarlo.", date: "2024-12-01" },
-    { author: "Ana García",   rating: 5, text: "Me atendieron el mismo día que llamé. Repararon los frenos en pocas horas. Muy recomendable.", date: "2024-11-15" },
-    { author: "Pere Solà",    rating: 5, text: "Taller de confianza en Ripollet. Llevo años yendo y siempre quedan perfectos.", date: "2024-10-20" },
-    { author: "María López",  rating: 5, text: "Pasé la ITV a la primera gracias a su revisión previa. Servicio excelente.", date: "2024-09-05" },
+    { author: "Joan Roquet Albert",       rating: 5, text: "Por fin he encontrado un taller donde te asesoran para que cambies lo justo y necesario y los precios son realmente competitivos. Se nota que disfrutan de su trabajo y transmiten mucha confianza.", date: "2025-12-01" },
+    { author: "armando cubillo",          rating: 5, text: "La atención es espectacular. Rápidos, educados y buscando soluciones. Difícil es conseguir un taller que genere CONFIANZA y en este caso Motrio la genera.", date: "2025-12-15" },
+    { author: "Jordi Franquesa Saloni",   rating: 5, text: "Mejor trato, precio y servicio que en la casa oficial. Disponen de las 3 B: bueno, bonito y barato.", date: "2025-11-20" },
+    { author: "Cristina Ortiz",           rating: 5, text: "Revisión previa a la ITV rápida y de confianza, precio muy competitivo. Trato cercano y profesional. Muy recomendables.", date: "2025-11-05" },
+    { author: "Juan Medina belmonte",     rating: 5, text: "Un servicio inmejorable, una atención profesional, muy contento. Lo recomiendo 100%.", date: "2026-02-01" },
+    { author: "Eva Franquesa",            rating: 5, text: "Taller de confianza, super rápidos y amables. Volveré seguro, además muy bien de precio.", date: "2026-01-15" },
   ],
 
   // FAQs
