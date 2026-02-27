@@ -2,6 +2,7 @@
 
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { config } from "@/config";
+import Image from "next/image";
 
 export function CTABanner({
   title = "¿Tu coche necesita atención?",
@@ -13,8 +14,21 @@ export function CTABanner({
   const ref = useScrollReveal();
 
   return (
-    <section className="relative bg-red-600 overflow-hidden py-12 sm:py-16">
-      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,0,0,.25) 10px,rgba(0,0,0,.25) 11px)" }} />
+    <section className="relative bg-zinc-950 overflow-hidden py-16 sm:py-20">
+      {/* Photo background */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/bg-cta.jpg"
+          alt="Coches en garaje profesional"
+          fill
+          quality={75}
+          className="object-cover"
+          sizes="100vw"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-zinc-950/60" />
+        <div className="absolute inset-0 bg-red-600/20" />
+      </div>
 
       <div ref={ref as any} className="reveal relative z-10 max-w-2xl mx-auto px-5 sm:px-8 text-center">
         <h2 className="font-display text-white uppercase leading-none mb-3" style={{ fontSize: "clamp(1.8rem, 8vw, 3.5rem)" }}>

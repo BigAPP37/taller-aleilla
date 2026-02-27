@@ -4,6 +4,7 @@ import Link from "next/link";
 import { config } from "@/config";
 import { serviceIconMap } from "@/components/ui/ServiceIcons";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { SectionBg } from "@/components/ui/SectionBg";
 
 export function ServicesGrid({ showAll = false }: { showAll?: boolean }) {
   const services = showAll ? config.services : config.services.filter(s => s.featured);
@@ -11,8 +12,9 @@ export function ServicesGrid({ showAll = false }: { showAll?: boolean }) {
   const gridRef = useScrollReveal({ threshold: 0.05 });
 
   return (
-    <section id="servicios" className="bg-zinc-950 bg-lines py-14 sm:py-24">
-      <div className="max-w-5xl mx-auto px-5 sm:px-8">
+    <section id="servicios" className="relative bg-zinc-950 py-14 sm:py-24 overflow-hidden">
+      <SectionBg src="/images/bg-services.jpg" alt="Motor de coche profesional" opacity={88} />
+      <div className="max-w-5xl mx-auto px-5 sm:px-8 relative z-10">
         <div ref={headerRef as any} className="reveal flex items-end justify-between mb-10 sm:mb-14">
           <div>
             <div className="flex items-center gap-2 mb-3">

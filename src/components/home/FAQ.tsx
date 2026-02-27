@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { config } from "@/config";
+import { SectionBg } from "@/components/ui/SectionBg";
 
 export function FAQ() {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <section className="bg-zinc-950 py-14 sm:py-20">
-      <div className="max-w-2xl mx-auto px-5 sm:px-8">
+    <section className="relative bg-zinc-950 py-14 sm:py-20 overflow-hidden">
+      <SectionBg src="/images/bg-faq.jpg" alt="Mecánico profesional trabajando" opacity={88} />
+      <div className="max-w-2xl mx-auto px-5 sm:px-8 relative z-10">
         <div className="text-center mb-10">
           <div className="flex items-center justify-center gap-2 mb-3">
             <div className="w-5 h-px bg-red-600" />

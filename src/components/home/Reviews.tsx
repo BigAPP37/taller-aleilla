@@ -2,14 +2,16 @@
 
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { config } from "@/config";
+import { SectionBg } from "@/components/ui/SectionBg";
 
 export function Reviews() {
   const headerRef = useScrollReveal();
   const carouselRef = useScrollReveal({ threshold: 0.08 });
 
   return (
-    <section id="reseñas" className="bg-zinc-900 bg-noise py-12 sm:py-20">
-      <div className="max-w-5xl mx-auto">
+    <section id="reseñas" className="relative bg-zinc-900 py-12 sm:py-20 overflow-hidden">
+      <SectionBg src="/images/bg-reviews.jpg" alt="Manos de mecánico trabajando" opacity={85} />
+      <div className="max-w-5xl mx-auto relative z-10">
         {/* Header */}
         <div ref={headerRef as any} className="reveal px-5 sm:px-8 mb-6 sm:mb-10">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
