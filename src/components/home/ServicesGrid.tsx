@@ -11,9 +11,9 @@ export function ServicesGrid({ showAll = false }: { showAll?: boolean }) {
   const gridRef = useScrollReveal({ threshold: 0.05 });
 
   return (
-    <section id="servicios" className="bg-zinc-950 py-14 sm:py-20">
+    <section id="servicios" className="bg-zinc-950 py-14 sm:py-24">
       <div className="max-w-5xl mx-auto px-5 sm:px-8">
-        <div ref={headerRef as any} className="reveal flex items-end justify-between mb-8">
+        <div ref={headerRef as any} className="reveal flex items-end justify-between mb-10 sm:mb-14">
           <div>
             <div className="flex items-center gap-2 mb-3">
               <div className="w-5 h-px bg-red-600" />
@@ -30,26 +30,49 @@ export function ServicesGrid({ showAll = false }: { showAll?: boolean }) {
           )}
         </div>
 
-        <div ref={gridRef as any} className="reveal reveal-stagger grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-          {services.map((s) => {
+        <div ref={gridRef as any} className="reveal reveal-stagger grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          {services.map((s, i) => {
             const Icon = serviceIconMap[s.slug];
             return (
               <Link
                 key={s.slug}
                 href={`/servicios/${s.slug}`}
-                className="group bg-zinc-900 border border-white/6 hover:border-red-600/40 hover:bg-zinc-800/60 active:scale-95 p-4 sm:p-5 flex flex-col gap-3 rounded-sm transition-all duration-200"
+                className="group relative bg-zinc-900 border border-white/[0.06] hover:border-red-600/40 active:scale-[0.98] rounded-sm transition-all duration-300 overflow-hidden"
               >
-                {Icon && (
-                  <Icon className="w-7 h-7 text-red-600/70 group-hover:text-red-500 transition-colors duration-200" />
-                )}
-                <div>
-                  <h3 className="font-display text-white uppercase text-sm sm:text-base leading-tight group-hover:text-red-500 transition-colors duration-200">
-                    {s.name}
-                  </h3>
-                  <p className="text-white/35 font-body text-xs leading-relaxed mt-1 hidden sm:block line-clamp-2">
-                    {s.shortDescription}
-                  </p>
+                {/* Red left accent */}
+                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <div className="p-5 sm:p-6 flex items-start gap-4">
+                  {/* Icon */}
+                  <div className="w-11 h-11 bg-red-600/10 border border-red-600/20 rounded-sm flex items-center justify-center flex-shrink-0 group-hover:bg-red-600 group-hover:border-red-600 transition-all duration-300">
+                    {Icon && (
+                      <Icon className="w-6 h-6 text-red-500 group-hover:text-white transition-colors duration-300" />
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-display text-white uppercase text-base sm:text-lg leading-tight mb-1.5 group-hover:text-red-500 transition-colors duration-200">
+                      {s.name}
+                    </h3>
+                    <p className="text-white/35 font-body text-xs sm:text-sm leading-relaxed line-clamp-2">
+                      {s.shortDescription}
+                    </p>
+                  </div>
+
+                  {/* Arrow */}
+                  <svg className="w-4 h-4 text-white/15 group-hover:text-red-500 transition-all duration-300 flex-shrink-0 mt-1 group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path d="M9 18l6-6-6-6"/>
+                  </svg>
                 </div>
+
+                {/* Background number */}
+                <span
+                  className="absolute -bottom-3 -right-1 font-display text-white/[0.02] leading-none select-none pointer-events-none"
+                  style={{ fontSize: "5rem" }}
+                  aria-hidden="true"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
               </Link>
             );
           })}

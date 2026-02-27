@@ -6,8 +6,8 @@ const pillars = [
   {
     n: "01",
     icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M13 2L3 14h8l-1 8 11-12h-8l1-8z"/>
       </svg>
     ),
     title: "Rapidez",
@@ -16,8 +16,8 @@ const pillars = [
   {
     n: "02",
     icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M4 3a2 2 0 00-2 2v14a2 2 0 002 2h16a2 2 0 002-2V5a2 2 0 00-2-2H4zm12.3 6.3l-5.3 5.3-3.3-3.3a1 1 0 10-1.4 1.4l4 4a1 1 0 001.4 0l6-6a1 1 0 00-1.4-1.4z"/>
       </svg>
     ),
     title: "Transparencia",
@@ -26,9 +26,8 @@ const pillars = [
   {
     n: "03",
     icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-        <path d="M16 3.5A4 4 0 0119.5 7M18 14c2 1 3.5 3 3.5 5.5"/>
+      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2a4 4 0 00-4 4c0 1.8 1.2 3.3 2.8 3.8L10 12H8l-4 8h16l-4-8h-2l-.8-2.2A4 4 0 0016 6a4 4 0 00-4-4zm0 2a2 2 0 110 4 2 2 0 010-4z"/>
       </svg>
     ),
     title: "Certificados",
@@ -37,9 +36,10 @@ const pillars = [
   {
     n: "04",
     icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
-        <path d="M12 6v6l4 2"/>
+      <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        <path d="M11 8h2v4h-2zM11 14h2v2h-2z" fill="none"/>
+        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.3 5h2.6L13 13h-2l-.3-6zM12 17a1.2 1.2 0 110-2.4 1.2 1.2 0 010 2.4z" fill="currentColor"/>
       </svg>
     ),
     title: "Precio justo",
@@ -60,54 +60,61 @@ export function WhyUs() {
   const statsRef = useScrollReveal({ threshold: 0.1 });
 
   return (
-    <section id="nosotros" className="bg-zinc-900 py-12 sm:py-20">
+    <section id="nosotros" className="bg-zinc-900 py-14 sm:py-24">
       <div className="max-w-5xl mx-auto px-5 sm:px-8">
 
-        <div ref={headerRef as any} className="reveal mb-8 sm:mb-12">
+        <div ref={headerRef as any} className="reveal mb-10 sm:mb-14">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-5 h-px bg-red-600" />
             <span className="text-red-500 text-[11px] font-body font-semibold uppercase tracking-[0.15em]">
               Por qué elegirnos
             </span>
           </div>
-          <h2 className="font-display text-white uppercase leading-none" style={{ fontSize: "clamp(1.8rem, 7vw, 3.5rem)" }}>
+          <h2 className="font-display text-white uppercase leading-none" style={{ fontSize: "clamp(2rem, 8vw, 4rem)" }}>
             Tu coche en manos<br />
             <span className="text-red-600">que de verdad cuidan</span>
           </h2>
         </div>
 
-        <div ref={cardsRef as any} className="reveal reveal-stagger grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mb-3">
+        <div ref={cardsRef as any} className="reveal reveal-stagger grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4">
           {pillars.map((p, i) => (
             <div
               key={i}
-              className="relative bg-zinc-950 border border-white/6 hover:border-red-600/30 transition-colors duration-300 p-4 sm:p-6 flex flex-col gap-3 rounded-sm overflow-hidden"
+              className="group relative bg-zinc-950 border border-white/[0.06] hover:border-red-600/40 transition-all duration-300 rounded-sm overflow-hidden"
             >
+              {/* Red top accent line */}
+              <div className="h-[3px] bg-red-600 w-full" />
+
+              <div className="p-5 sm:p-6">
+                {/* Icon container */}
+                <div className="w-12 h-12 bg-red-600 rounded-sm flex items-center justify-center text-white mb-5 group-hover:scale-105 transition-transform duration-300">
+                  {p.icon}
+                </div>
+
+                <h3 className="font-display text-white uppercase text-lg sm:text-xl leading-tight mb-3">
+                  {p.title}
+                </h3>
+                <p className="text-white/40 font-body text-sm leading-relaxed">
+                  {p.desc}
+                </p>
+              </div>
+
+              {/* Big background number */}
               <span
-                className="absolute -bottom-3 -right-1 font-display text-red-600/10 leading-none select-none pointer-events-none"
-                style={{ fontSize: "clamp(4rem, 12vw, 7rem)" }}
+                className="absolute -bottom-4 -right-2 font-display text-white/[0.03] leading-none select-none pointer-events-none"
+                style={{ fontSize: "7rem" }}
                 aria-hidden="true"
               >
                 {p.n}
               </span>
-              <div className="w-10 h-10 bg-red-600/10 border border-red-600/20 rounded-sm flex items-center justify-center text-red-500 flex-shrink-0">
-                {p.icon}
-              </div>
-              <div className="relative z-10">
-                <h3 className="font-display text-white uppercase text-base sm:text-lg leading-tight mb-1.5">
-                  {p.title}
-                </h3>
-                <p className="text-white/40 font-body text-xs sm:text-sm leading-relaxed">
-                  {p.desc}
-                </p>
-              </div>
             </div>
           ))}
         </div>
 
-        <div ref={statsRef as any} className="reveal reveal-stagger grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/5 border border-white/6 rounded-sm overflow-hidden">
+        <div ref={statsRef as any} className="reveal grid grid-cols-2 sm:grid-cols-4 gap-3">
           {stats.map((s, i) => (
-            <div key={i} className="bg-zinc-950 text-center py-5 px-3">
-              <div className="font-display text-red-600 leading-none mb-1" style={{ fontSize: "clamp(1.5rem, 5vw, 2.2rem)" }}>
+            <div key={i} className="bg-zinc-950 border border-white/[0.06] text-center py-6 px-3 rounded-sm">
+              <div className="font-display text-red-600 leading-none mb-1.5" style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
                 {s.v}
               </div>
               <div className="text-white/30 font-body text-xs uppercase tracking-wider">{s.l}</div>
