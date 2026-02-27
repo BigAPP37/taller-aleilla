@@ -1,4 +1,5 @@
 import { config } from "@/config";
+import { municipioSlugs } from "@/config/municipios";
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -7,6 +8,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.8,
+  }));
+
+  const municipioUrls = municipioSlugs.map(slug => ({
+    url: `${config.domain}/taller-mecanico/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.85,
   }));
 
   return [
@@ -29,5 +37,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     ...serviceUrls,
+    ...municipioUrls,
   ];
 }

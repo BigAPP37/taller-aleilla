@@ -1,31 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { config } from "@/config";
 
 export function Reviews() {
-  const ref = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        entry.target.querySelectorAll<HTMLElement>(".ri").forEach((el, i) => {
-          setTimeout(() => { el.style.opacity = "1"; el.style.transform = "translateX(0)"; }, i * 100);
-        });
-        io.disconnect();
-      },
-      { threshold: 0.1 }
-    );
-    if (ref.current) io.observe(ref.current);
-    return () => io.disconnect();
-  }, []);
+  const headerRef = useScrollReveal();
+  const carouselRef = useScrollReveal({ threshold: 0.08 });
 
   return (
-    <section ref={ref} id="reseñas" className="bg-zinc-900 py-12 sm:py-20">
+    <section id="reseñas" className="bg-zinc-900 py-12 sm:py-20">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="px-5 sm:px-8 mb-6 sm:mb-10">
+        <div ref={headerRef as any} className="reveal px-5 sm:px-8 mb-6 sm:mb-10">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
@@ -60,7 +46,8 @@ export function Reviews() {
 
         {/* Carrusel horizontal deslizable */}
         <div
-          className="flex gap-3 overflow-x-auto px-5 sm:px-8 pb-4"
+          ref={carouselRef as any}
+          className="reveal reveal-stagger flex gap-3 overflow-x-auto px-5 sm:px-8 pb-4"
           style={{
             scrollSnapType: "x mandatory",
             WebkitOverflowScrolling: "touch",
@@ -70,13 +57,8 @@ export function Reviews() {
           {config.reviews.map((r, i) => (
             <div
               key={i}
-              className="ri flex-shrink-0 w-[78vw] sm:w-72 lg:w-64 bg-zinc-800/50 border border-white/6 p-5 flex flex-col gap-3 rounded-sm"
-              style={{
-                scrollSnapAlign: "start",
-                opacity: 0,
-                transform: "translateX(20px)",
-                transition: "opacity 0.4s ease, transform 0.4s ease",
-              }}
+              className="flex-shrink-0 w-[78vw] sm:w-72 lg:w-64 bg-zinc-800/50 border border-white/6 p-5 flex flex-col gap-3 rounded-sm"
+              style={{ scrollSnapAlign: "start" }}
             >
               <div className="flex gap-0.5">
                 {[1,2,3,4,5].map(s => (
