@@ -22,16 +22,16 @@ export function Hero() {
       {/* Foto de fondo — ocupa toda la pantalla */}
       <div className="absolute inset-0">
         <Image
-          src="/images/taller-fachada.jpg"
-          alt="Taller Motrio Aelia Motor en Ripollet"
+          src="/images/taller-hero-stock.jpg"
+          alt="Mecánico profesional trabajando en motor — Taller Motrio Aelia Motor"
           fill
           priority
           quality={90}
           className="object-cover object-center"
         />
         {/* Overlay fuerte para legibilidad */}
-        <div className="absolute inset-0 bg-zinc-950/75" />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-zinc-950/60" />
+        <div className="absolute inset-0 bg-zinc-950/70" />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/30 to-zinc-950/50" />
       </div>
 
       {/* Barra roja izquierda */}
@@ -64,9 +64,9 @@ export function Hero() {
             transition: "all 0.5s ease",
           }}
         >
-          Reparamos<br />
-          <span className="text-red-600">tu coche</span><br />
-          hoy.
+          Tu coche.<br />
+          <span className="text-red-600">Nuestro</span><br />
+          estándar.
         </h1>
 
         {/* Subtítulo */}

@@ -60,7 +60,7 @@ export function WhyUs() {
   const statsRef = useScrollReveal({ threshold: 0.1 });
 
   return (
-    <section id="nosotros" className="bg-zinc-900 py-14 sm:py-24">
+    <section id="nosotros" className="bg-zinc-900 bg-noise py-14 sm:py-24">
       <div className="max-w-5xl mx-auto px-5 sm:px-8">
 
         <div ref={headerRef as any} className="reveal mb-10 sm:mb-14">

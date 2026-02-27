@@ -2,7 +2,7 @@ export const config = {
   // Identidad
   brandName: "Aelia Motor",
   legalName: "Aelia Motor S.L.",
-  tagline: "Reparamos tu coche hoy.",
+  tagline: "Tu coche. Nuestro estándar.",
   network: "Motrio",
 
   // Contacto

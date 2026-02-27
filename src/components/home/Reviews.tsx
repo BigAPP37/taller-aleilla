@@ -8,7 +8,7 @@ export function Reviews() {
   const carouselRef = useScrollReveal({ threshold: 0.08 });
 
   return (
-    <section id="reseñas" className="bg-zinc-900 py-12 sm:py-20">
+    <section id="reseñas" className="bg-zinc-900 bg-noise py-12 sm:py-20">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div ref={headerRef as any} className="reveal px-5 sm:px-8 mb-6 sm:mb-10">
