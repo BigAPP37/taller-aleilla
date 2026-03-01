@@ -2,22 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-const GA_ID = "G-32894MD9VZ";
-
-function loadGA() {
-  if (document.getElementById("ga-script")) return;
-  const s = document.createElement("script");
-  s.id = "ga-script";
-  s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-  s.async = true;
-  document.head.appendChild(s);
-  (window as any).dataLayer = (window as any).dataLayer || [];
-  function gtag(...args: any[]) { (window as any).dataLayer.push(args); }
-  (window as any).gtag = gtag;
-  gtag("js", new Date());
-  gtag("config", GA_ID, { anonymize_ip: true });
-}
-
 export function CookieBanner() {
   const [visible, setVisible] = useState(false);
 
@@ -26,14 +10,22 @@ export function CookieBanner() {
     if (!consent) {
       setVisible(true);
     } else if (consent === "accepted") {
-      loadGA();
+      grantConsent();
     }
   }, []);
+
+  function grantConsent() {
+    if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
+      (window as any).gtag("consent", "update", {
+        analytics_storage: "granted",
+      });
+    }
+  }
 
   function accept() {
     localStorage.setItem("cookie_consent", "accepted");
     setVisible(false);
-    loadGA();
+    grantConsent();
   }
 
   function reject() {
@@ -47,14 +39,11 @@ export function CookieBanner() {
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4 sm:p-5">
       <div className="max-w-4xl mx-auto bg-zinc-900 border border-white/10 rounded-sm shadow-2xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5">
-          {/* Icono */}
           <div className="w-10 h-10 bg-red-600 rounded-sm flex items-center justify-center shrink-0">
             <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7l5-8v4h4l-5 8z"/>
             </svg>
           </div>
-
-          {/* Texto */}
           <div className="flex-1 min-w-0">
             <p className="text-white font-body text-sm font-medium mb-1">
               Usamos cookies de análisis
@@ -66,8 +55,6 @@ export function CookieBanner() {
               </a>
             </p>
           </div>
-
-          {/* Botones */}
           <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
             <button
               onClick={reject}
