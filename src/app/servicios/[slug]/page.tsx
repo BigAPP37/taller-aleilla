@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { CTABanner } from "@/components/home/CTABanner";
 import { config } from "@/config";
 import { serviceContent } from "@/config/serviceContent";
+import { serviceBackgrounds } from "@/config/serviceBackgrounds";
 import { serviceIconMap } from "@/components/ui/ServiceIcons";
 import type { Metadata } from "next";
 
@@ -26,27 +28,46 @@ export default function ServicePage({ params }: { params: { slug: string } }) {
   if (!service) notFound();
 
   const content = serviceContent[params.slug];
+  const bg = serviceBackgrounds[params.slug];
   const Icon = serviceIconMap[params.slug];
 
   return (
     <>
-      {/* Hero de servicio */}
-      <div className="pt-20 pb-10 bg-zinc-950 border-b border-white/6">
-        <div className="max-w-4xl mx-auto px-5 sm:px-8">
+      {/* Hero de servicio con foto de fondo */}
+      <div className="relative pt-20 pb-14 sm:pb-20 overflow-hidden">
+        {/* Background image */}
+        {bg && (
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={bg.src}
+              alt={bg.alt}
+              fill
+              priority
+              quality={80}
+              className="object-cover"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-zinc-950/80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/50 to-zinc-950/70" />
+          </div>
+        )}
+        {!bg && <div className="absolute inset-0 bg-zinc-950" />}
+
+        <div className="max-w-4xl mx-auto px-5 sm:px-8 relative z-10">
           <Link href="/servicios" className="text-white/30 hover:text-red-500 font-body text-sm transition-colors mb-6 block">
             ← Volver a servicios
           </Link>
           <div className="flex items-start gap-5">
             {Icon && (
-              <div className="w-14 h-14 bg-zinc-900 border border-white/8 rounded-sm flex items-center justify-center flex-shrink-0 mt-1">
-                <Icon className="w-7 h-7 text-red-600" />
+              <div className="w-14 h-14 bg-red-600 rounded-sm flex items-center justify-center flex-shrink-0 mt-1">
+                <Icon className="w-7 h-7 text-white" />
               </div>
             )}
             <div>
               <h1 className="font-display text-white uppercase leading-none mb-3" style={{ fontSize: "clamp(1.8rem, 7vw, 3.5rem)" }}>
                 {service.name}
               </h1>
-              <p className="text-white/55 font-body text-base sm:text-lg leading-relaxed max-w-2xl">
+              <p className="text-white/60 font-body text-base sm:text-lg leading-relaxed max-w-2xl">
                 {content?.intro ?? service.shortDescription}
               </p>
             </div>
