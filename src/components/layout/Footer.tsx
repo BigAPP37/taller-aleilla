@@ -29,10 +29,13 @@ export function Footer() {
                   {s.name}
                 </Link>
               ))}
+              <Link href="/servicios" className="text-red-500/60 hover:text-red-400 font-body text-sm transition-colors mt-1">
+                Ver todos →
+              </Link>
             </div>
           </div>
 
-          {/* Contacto */}
+          {/* Contacto + Blog */}
           <div>
             <h4 className="text-white/50 font-body text-xs uppercase tracking-widest mb-4">Contacto</h4>
             <div className="flex flex-col gap-2 text-white/35 font-body text-sm">
@@ -40,6 +43,11 @@ export function Footer() {
               <a href={`mailto:${config.email}`} className="hover:text-white transition-colors">{config.email}</a>
               <p>{config.street}</p>
               <p>{config.postalCode} {config.city}</p>
+              <div className="flex gap-3 mt-2">
+                <Link href="/contacto" className="text-red-500/60 hover:text-red-400 transition-colors">Formulario</Link>
+                <span className="text-white/10">·</span>
+                <Link href="/blog" className="text-red-500/60 hover:text-red-400 transition-colors">Blog</Link>
+              </div>
             </div>
           </div>
         </div>
