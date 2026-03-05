@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFloat } from "@/components/ui/WhatsAppFloat";
 import { CookieBanner } from "@/components/ui/CookieBanner";
 import { GoogleAnalytics } from "@/components/ui/GoogleAnalytics";
+import { ChatBot } from "@/components/ui/ChatBot";
 import { config } from "@/config";
 
 const display = Bebas_Neue({
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main>{children}</main>
         <Footer />
+        <ChatBot />
         <WhatsAppFloat />
         <CookieBanner />
       </body>
