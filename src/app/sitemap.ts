@@ -1,5 +1,6 @@
 import { config } from "@/config";
 import { municipioSlugs } from "@/config/municipios";
+import { blogPosts } from "@/config/blogPosts";
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -17,6 +18,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }));
 
+  const blogUrls = blogPosts.map(p => ({
+    url: `${config.domain}/blog/${p.slug}`,
+    lastModified: new Date(p.date),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
   return [
     {
       url: config.domain,
@@ -31,6 +39,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${config.domain}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: `${config.domain}/contacto`,
       lastModified: new Date(),
       changeFrequency: "yearly",
@@ -38,5 +52,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...serviceUrls,
     ...municipioUrls,
+    ...blogUrls,
   ];
 }
