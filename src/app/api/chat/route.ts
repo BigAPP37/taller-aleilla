@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 const SYSTEM_PROMPT = `Eres el asistente virtual de Aelia Motor, un taller mecánico oficial Motrio en Ripollet, Barcelona.
 
@@ -51,17 +51,17 @@ function checkRate(ip: string): boolean {
   const now = Date.now();
   const entry = rateLimit.get(ip);
   if (!entry || now > entry.resetAt) {
-    rateLimit.set(ip, { count: 1, resetAt: now + 60 * 1000 }); // 1 min window
+    rateLimit.set(ip, { count: 1, resetAt: now + 60 * 1000 });
     return true;
   }
-  if (entry.count >= 15) return false; // max 15 messages per minute
+  if (entry.count >= 15) return false;
   entry.count++;
   return true;
 }
 
 export async function POST(req: NextRequest) {
   try {
-    if (!ANTHROPIC_API_KEY) {
+    if (!GEMINI_API_KEY) {
       return NextResponse.json(
         { error: "Chat no configurado" },
         { status: 500 }
@@ -89,24 +89,41 @@ export async function POST(req: NextRequest) {
     // Limit conversation length
     const trimmedMessages = messages.slice(-20);
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 300,
-        system: SYSTEM_PROMPT,
-        messages: trimmedMessages,
-      }),
-    });
+    // Convert messages to Gemini format
+    const geminiContents = trimmedMessages.map(
+      (m: { role: string; content: string }) => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.content }],
+      })
+    );
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system_instruction: {
+            parts: [{ text: SYSTEM_PROMPT }],
+          },
+          contents: geminiContents,
+          generationConfig: {
+            maxOutputTokens: 300,
+            temperature: 0.7,
+          },
+          safetySettings: [
+            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
+          ],
+        }),
+      }
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Anthropic API error:", response.status, errorText);
+      console.error("Gemini API error:", response.status, errorText);
       return NextResponse.json(
         { error: "Error del servicio de chat" },
         { status: 502 }
@@ -114,9 +131,10 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await response.json();
-    const text = data.content
-      ?.map((b: any) => b.text || "")
-      .join("") || "Perdona, no he podido procesar tu mensaje.";
+
+    const text =
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Perdona, no he podido procesar tu mensaje.";
 
     return NextResponse.json({ text });
   } catch (error) {
