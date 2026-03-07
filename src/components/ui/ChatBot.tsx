@@ -57,7 +57,7 @@ export function ChatBot() {
     }
   }, [isOpen]);
 
-  // Greeting on first open
+  // Greeting on first open — runs client-side only
   useEffect(() => {
     if (isOpen && !hasGreeted) {
       setHasGreeted(true);
@@ -65,7 +65,7 @@ export function ChatBot() {
       const open = isOpenNow();
       const greeting = open
         ? "¡Hola! Soy el asistente de Aelia Motor. ¿En qué puedo ayudarte?"
-        : "¡Hola! Ahora mismo estamos fuera de horario, pero déjanos tus datos y te contactamos a primera hora.";
+        : "¡Hola! Ahora mismo estamos fuera de horario, pero déjanos tus datos y te contactamos a primera hora. Nuestro horario es de lunes a viernes de 8:00 a 19:30 y sábados de 9:00 a 14:00.";
 
       setMessages([
         {
@@ -294,14 +294,16 @@ export function ChatBot() {
       setMessages(finalMessages);
 
       // Check if bot is summarizing data (ready for WhatsApp)
+      // Only trigger after at least 3 user messages (name, phone/car, service)
+      const userMsgCount = finalMessages.filter((m) => m.role === "user").length;
       const lower = assistantText.toLowerCase();
       if (
-        lower.includes("contacte") ||
-        lower.includes("contactar") ||
-        lower.includes("resumen") ||
-        lower.includes("datos que tengo") ||
-        lower.includes("presupuesto exacto") ||
-        lower.includes("todo correcto")
+        userMsgCount >= 3 &&
+        (lower.includes("que el taller te contacte") ||
+          lower.includes("quieres que te contacte") ||
+          lower.includes("quieres que te llamemos") ||
+          lower.includes("datos que tengo") ||
+          lower.includes("todo correcto"))
       ) {
         setShowWhatsApp(true);
       }
