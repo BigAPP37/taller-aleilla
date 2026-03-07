@@ -16,14 +16,31 @@ interface ClientData {
   servicio?: string;
 }
 
+// ─── Hours check (Europe/Madrid) ──────────────────────────
+function isOpenNow(): boolean {
+  const now = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Europe/Madrid" })
+  );
+  const day = now.getDay(); // 0=Sun
+  const hour = now.getHours();
+  const mins = now.getMinutes();
+  const time = hour * 60 + mins;
+
+  if (day === 0) return false; // Domingo cerrado
+  if (day === 6) return time >= 540 && time < 840; // Sábado 9:00-14:00
+  return time >= 480 && time < 1170; // L-V 8:00-19:30
+}
+
 // ─── Component ────────────────────────────────────────────
 export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [clientData, setClientData] = useState<ClientData>({});
   const [showWhatsApp, setShowWhatsApp] = useState(false);
+  const [showFallbackForm, setShowFallbackForm] = useState(false);
+  const [fallbackSent, setFallbackSent] = useState(false);
+  const [fallbackLoading, setFallbackLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [hasGreeted, setHasGreeted] = useState(false);
@@ -44,14 +61,26 @@ export function ChatBot() {
   useEffect(() => {
     if (isOpen && !hasGreeted) {
       setHasGreeted(true);
+
+      const open = isOpenNow();
+      const greeting = open
+        ? "¡Hola! Soy el asistente de Aelia Motor. ¿En qué puedo ayudarte?"
+        : "¡Hola! Ahora mismo estamos fuera de horario, pero déjanos tus datos y te contactamos a primera hora.";
+
       setMessages([
         {
           role: "assistant",
-          text: "¡Hola! Soy el asistente de Aelia Motor. ¿En qué puedo ayudarte?",
+          text: greeting,
           buttons: [
-            { label: "Pedir presupuesto", value: "Quiero pedir un presupuesto" },
+            {
+              label: "Pedir presupuesto",
+              value: "Quiero pedir un presupuesto",
+            },
             { label: "Pedir cita", value: "Quiero pedir cita" },
-            { label: "Tengo una duda", value: "Tengo una pregunta sobre un servicio" },
+            {
+              label: "Tengo una duda",
+              value: "Tengo una pregunta sobre un servicio",
+            },
           ],
         },
       ]);
@@ -67,33 +96,49 @@ export function ChatBot() {
 
     const data: ClientData = {};
 
-    // Extract phone (9+ digits)
-    const phoneMatch = allText.match(
-      /(\d{3}[\s.-]?\d{3}[\s.-]?\d{3,4})/
-    );
+    // Phone (9+ digits)
+    const phoneMatch = allText.match(/(\d{3}[\s.-]?\d{3}[\s.-]?\d{3,4})/);
     if (phoneMatch) {
       data.telefono = phoneMatch[1].replace(/[\s.-]/g, "");
     }
 
-    // Extract name from assistant confirmations
+    // Name from assistant confirmations
     const assistantTexts = allMessages
       .filter((m) => m.role === "assistant")
       .map((m) => m.text)
       .join(" ");
 
     const nameMatch = assistantTexts.match(
-      /(?:Gracias|Genial|Perfecto|Entendido|Hola)[,.]?\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)/
+      /(?:Gracias|Genial|Entendido),?\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)/
     );
-    if (nameMatch) {
+    if (
+      nameMatch &&
+      !["Para", "El", "La", "Los", "Las", "Tu", "Un", "Una"].includes(
+        nameMatch[1]
+      )
+    ) {
       data.nombre = nameMatch[1];
+    } else {
+      const nameMatch2 = assistantTexts.match(
+        /Perfecto,\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)/
+      );
+      if (
+        nameMatch2 &&
+        !["Para", "El", "La", "Los", "Las", "Tu", "Un", "Una"].includes(
+          nameMatch2[1]
+        )
+      ) {
+        data.nombre = nameMatch2[1];
+      }
     }
 
-    // Extract car info — look for brand/model patterns in user messages
+    // Car
     const carBrands =
       /\b(seat|ford|renault|peugeot|citroen|citroën|opel|volkswagen|vw|bmw|mercedes|audi|toyota|hyundai|kia|nissan|fiat|dacia|skoda|mazda|honda|volvo|mini|tesla|cupra|mg)\b/i;
     const carMatch = allText.match(
       new RegExp(
-        carBrands.source + /\s+([a-záéíóúñ0-9\s]+?)(?:\s+(?:de\s+)?(\d{4}))?\b/i.source,
+        carBrands.source +
+          /\s+([a-záéíóúñ0-9\s]+?)(?:\s+(?:de\s+)?(\d{4}))?\b/i.source,
         "i"
       )
     );
@@ -104,37 +149,17 @@ export function ChatBot() {
       data.coche = [brand, model, year].filter(Boolean).join(" ").trim();
     }
 
-    // Extract service — from user messages after the car/phone info
+    // Services
     const serviceKeywords = [
-      "aceite",
-      "frenos",
-      "pastillas",
-      "discos",
-      "itv",
-      "pre-itv",
-      "pre itv",
-      "revision",
-      "revisión",
-      "neumáticos",
-      "neumaticos",
-      "ruedas",
-      "embrague",
-      "distribución",
-      "distribucion",
-      "climatización",
-      "climatizacion",
-      "aire acondicionado",
-      "diagnosis",
-      "diagnóstico",
-      "diagnostico",
-      "batería",
-      "bateria",
-      "arranque",
-      "escape",
-      "suspensión",
-      "suspension",
-      "amortiguadores",
-      "cambio de aceite",
+      "aceite", "filtros", "frenos", "pastillas", "discos", "itv", "pre-itv",
+      "pre itv", "revision", "revisión", "neumáticos", "neumaticos", "ruedas",
+      "embrague", "distribución", "distribucion", "climatización",
+      "climatizacion", "aire acondicionado", "diagnosis", "diagnóstico",
+      "diagnostico", "batería", "bateria", "arranque", "escape", "suspensión",
+      "suspension", "amortiguadores", "cambio de aceite", "multimedia", "radio",
+      "pantalla", "lunas", "parabrisas", "carrocería", "carroceria", "pintura",
+      "chapa", "correa", "refrigerante", "anticongelante", "dirección",
+      "direccion", "turbo", "inyectores", "bujías", "bujias",
     ];
 
     const foundServices: string[] = [];
@@ -163,7 +188,6 @@ export function ChatBot() {
     if (data.telefono) lines.push(`Mi teléfono: ${data.telefono}.`);
 
     if (!data.nombre && !data.coche && !data.servicio) {
-      // Fallback: send last few user messages
       const userMsgs = messages
         .filter((m) => m.role === "user")
         .slice(-3)
@@ -176,6 +200,64 @@ export function ChatBot() {
 
     const text = encodeURIComponent(lines.join("\n"));
     return `https://wa.me/34608205512?text=${text}`;
+  }
+
+  // ─── Fallback form submit via /api/contacto ──────────────
+  async function handleFallbackSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const nombre = formData.get("nombre") as string;
+    const telefono = formData.get("telefono") as string;
+    const servicio = formData.get("servicio") as string;
+
+    if (!nombre || !telefono || !servicio) return;
+
+    setFallbackLoading(true);
+
+    try {
+      const res = await fetch("/api/contacto", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre,
+          telefono,
+          servicio: `chatbot-fallback: ${servicio}`,
+          modelo: "No indicado",
+        }),
+      });
+
+      if (res.ok) {
+        setFallbackSent(true);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            text: "¡Datos recibidos! Te contactaremos lo antes posible. Si prefieres, también puedes llamarnos al 608 20 55 12.",
+          },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            text: "No se han podido enviar los datos. Puedes llamarnos directamente al 608 20 55 12 o escribirnos por WhatsApp.",
+          },
+        ]);
+      }
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          text: "No se han podido enviar los datos. Puedes llamarnos directamente al 608 20 55 12 o escribirnos por WhatsApp.",
+        },
+      ]);
+    } finally {
+      setFallbackLoading(false);
+      setShowFallbackForm(false);
+    }
   }
 
   // ─── Send message to API ─────────────────────────────────
@@ -211,7 +293,7 @@ export function ChatBot() {
       const finalMessages = [...updatedMessages, assistantMsg];
       setMessages(finalMessages);
 
-      // Check if the bot is summarizing data (ready for WhatsApp)
+      // Check if bot is summarizing data (ready for WhatsApp)
       const lower = assistantText.toLowerCase();
       if (
         lower.includes("contacte") ||
@@ -222,16 +304,17 @@ export function ChatBot() {
         lower.includes("todo correcto")
       ) {
         setShowWhatsApp(true);
-        setClientData(extractClientData(finalMessages));
       }
     } catch {
+      // ─── Fallback: show form instead of dead-end message ───
       setMessages([
         ...updatedMessages,
         {
           role: "assistant",
-          text: "Vaya, ha habido un problema de conexión. Puedes escribirnos directamente al 608 20 55 12.",
+          text: "El chat no está disponible ahora mismo. Pero puedes dejarnos tus datos y te contactamos enseguida:",
         },
       ]);
+      setShowFallbackForm(true);
     } finally {
       setIsLoading(false);
     }
@@ -239,12 +322,6 @@ export function ChatBot() {
 
   function handleButton(value: string) {
     sendMessage(value);
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
-    sendMessage(input.trim());
   }
 
   return (
@@ -369,6 +446,49 @@ export function ChatBot() {
               </div>
             )}
 
+            {/* ─── Fallback form when API fails ─────────────── */}
+            {showFallbackForm && !fallbackSent && (
+              <div className="bg-zinc-800 border border-white/10 rounded-lg p-3 mt-2 space-y-2">
+                <input
+                  name="nombre"
+                  type="text"
+                  placeholder="Tu nombre"
+                  required
+                  form="fallback-form"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-white font-body text-xs placeholder:text-white/30 focus:outline-none focus:border-red-600/40"
+                />
+                <input
+                  name="telefono"
+                  type="tel"
+                  placeholder="Teléfono"
+                  required
+                  form="fallback-form"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-white font-body text-xs placeholder:text-white/30 focus:outline-none focus:border-red-600/40"
+                />
+                <input
+                  name="servicio"
+                  type="text"
+                  placeholder="¿Qué necesitas? (ej: cambio de aceite)"
+                  required
+                  form="fallback-form"
+                  className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-white font-body text-xs placeholder:text-white/30 focus:outline-none focus:border-red-600/40"
+                />
+                <form
+                  id="fallback-form"
+                  onSubmit={handleFallbackSubmit}
+                  className="contents"
+                >
+                  <button
+                    type="submit"
+                    disabled={fallbackLoading}
+                    className="w-full bg-red-600 hover:bg-red-500 disabled:bg-zinc-700 text-white font-body font-bold text-xs px-4 py-2.5 rounded-lg transition-colors"
+                  >
+                    {fallbackLoading ? "Enviando..." : "Enviar datos"}
+                  </button>
+                </form>
+              </div>
+            )}
+
             {/* WhatsApp CTA when data is collected */}
             {showWhatsApp && (
               <div className="bg-green-900/30 border border-green-500/20 rounded-lg p-3 mt-2">
@@ -412,7 +532,7 @@ export function ChatBot() {
                 }
               }}
               placeholder="Escribe tu mensaje..."
-              disabled={isLoading}
+              disabled={isLoading || showFallbackForm}
               className="flex-1 bg-zinc-800 border border-white/6 rounded-full px-4 py-2 text-white font-body text-sm placeholder:text-white/25 focus:outline-none focus:border-red-600/40 disabled:opacity-50"
             />
             <button
@@ -420,7 +540,7 @@ export function ChatBot() {
                 if (!input.trim() || isLoading) return;
                 sendMessage(input.trim());
               }}
-              disabled={isLoading || !input.trim()}
+              disabled={isLoading || !input.trim() || showFallbackForm}
               className="w-9 h-9 bg-red-600 hover:bg-red-500 disabled:bg-zinc-700 rounded-full flex items-center justify-center transition-colors shrink-0"
             >
               <svg
